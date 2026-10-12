@@ -6,7 +6,9 @@ import { AppRegistry } from './apps.js';
 
 class WebOSKernel {
     constructor() {
+        // FIX: Explicitly bind Icons to the kernel instance so AppRegistry can access them
         this.Icons = Icons;
+        
         this.vfs = new VirtualFileSystem();
         this.processManager = new ProcessManager();
         this.windowManager = new WindowManager(this.processManager);
@@ -23,6 +25,7 @@ class WebOSKernel {
 
     renderDesktopIcons() {
         const grid = document.getElementById('desktop-grid');
+        if (!grid) return;
         grid.innerHTML = '';
         
         try {
@@ -30,7 +33,7 @@ class WebOSKernel {
             for (const [filename, fileObj] of Object.entries(desktopFiles)) {
                 const iconEl = document.createElement('div');
                 iconEl.className = 'desktop-icon';
-                const svgIcon = fileObj.type === 'dir' ? Icons.folder : Icons.file;
+                const svgIcon = fileObj.type === 'dir' ? this.Icons.folder : this.Icons.file;
                 
                 iconEl.innerHTML = `
                     <div class="desktop-icon-svg">${svgIcon}</div>
@@ -59,15 +62,16 @@ class WebOSKernel {
 
     renderLaunchpadApps() {
         const grid = document.getElementById('launchpad-grid');
+        if (!grid) return;
         grid.innerHTML = '';
         
         const appList = [
-            { name: 'Terminal', icon: Icons.terminal, id: 'terminal' },
-            { name: 'Notepad', icon: Icons.notepad, id: 'notepad' },
-            { name: 'File Explorer', icon: Icons.explorer, id: 'explorer' },
-            { name: 'Calculator', icon: Icons.calculator, id: 'calculator' },
-            { name: 'Browser', icon: Icons.browser, id: 'browser' },
-            { name: 'Settings', icon: Icons.settings, id: 'settings' }
+            { name: 'Terminal', icon: this.Icons.terminal, id: 'terminal' },
+            { name: 'Notepad', icon: this.Icons.notepad, id: 'notepad' },
+            { name: 'File Explorer', icon: this.Icons.explorer, id: 'explorer' },
+            { name: 'Calculator', icon: this.Icons.calculator, id: 'calculator' },
+            { name: 'Browser', icon: this.Icons.browser, id: 'browser' },
+            { name: 'Settings', icon: this.Icons.settings, id: 'settings' }
         ];
 
         appList.forEach(item => {
@@ -87,7 +91,7 @@ class WebOSKernel {
             const content = this.vfs.readFile(path);
             this.windowManager.createWindow({
                 title: filename,
-                iconSvg: Icons.notepad,
+                iconSvg: this.Icons.notepad,
                 width: 520, height: 360, appName: 'Notepad',
                 renderContent: (container, winId) => {
                     container.style.display = 'flex';
