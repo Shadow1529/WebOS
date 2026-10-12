@@ -1,0 +1,299 @@
+:root {
+    --glass-bg: rgba(255, 255, 255, 0.2);
+    --glass-border: rgba(255, 255, 255, 0.35);
+    --glass-blur: blur(30px);
+    --dock-bg: rgba(255, 255, 255, 0.25);
+    --topbar-bg: rgba(30, 30, 30, 0.45);
+    --window-bg: rgba(246, 246, 248, 0.92);
+    --window-border: rgba(200, 200, 204, 0.6);
+    --text-primary: #1d1d1f;
+    --text-light: #f5f5f7;
+    --accent-color: #007aff;
+    --system-font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+}
+
+body, html {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    font-family: var(--system-font);
+    background: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=2560&q=80') no-repeat center center fixed;
+    background-size: cover;
+}
+
+.top-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 28px;
+    background: var(--topbar-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 14px;
+    z-index: 20000;
+    color: var(--text-light);
+    font-size: 13px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.top-bar-left { display: flex; align-items: center; gap: 16px; }
+.apple-menu-btn { background: transparent; border: none; color: var(--text-light); cursor: pointer; padding: 2px 6px; border-radius: 4px; display: flex; align-items: center; }
+.apple-menu-btn:hover { background: rgba(255, 255, 255, 0.2); }
+.top-bar-app-name { font-weight: 600; }
+.top-bar-right { display: flex; align-items: center; gap: 14px; }
+.top-bar-item { display: flex; align-items: center; font-size: 12px; font-weight: 500; }
+
+.desktop {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    padding-top: 28px;
+    overflow: hidden;
+}
+
+.desktop-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    grid-auto-rows: 95px;
+    gap: 16px;
+    padding: 24px;
+    width: 100%;
+    height: calc(100% - 80px);
+    z-index: 1;
+}
+
+.desktop-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 8px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    text-align: center;
+}
+
+.desktop-icon:hover { background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px); }
+.desktop-icon:active { transform: scale(0.96); }
+.desktop-icon-svg { width: 52px; height: 52px; margin-bottom: 6px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.25)); }
+.desktop-icon-label {
+    color: var(--text-light);
+    font-size: 12px;
+    font-weight: 500;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.85);
+    max-width: 80px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.window-layer {
+    position: absolute;
+    top: 28px;
+    left: 0;
+    width: 100%;
+    height: calc(100% - 28px);
+    pointer-events: none;
+    z-index: 10;
+}
+
+.os-window {
+    position: absolute;
+    background: var(--window-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--window-border);
+    border-radius: 12px;
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.35);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    pointer-events: auto;
+    min-width: 320px;
+    min-height: 220px;
+}
+
+.os-window.maximized {
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: calc(100% - 28px) !important;
+    border-radius: 0 !important;
+}
+
+.window-header {
+    height: 40px;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.7), rgba(230,230,235,0.7));
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    display: flex;
+    align-items: center;
+    padding: 0 14px;
+    cursor: grab;
+}
+.window-header:active { cursor: grabbing; }
+
+.window-controls { display: flex; gap: 8px; align-items: center; }
+.window-btn {
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    box-shadow: inset 0 0 0 0.5px rgba(0,0,0,0.2);
+}
+.window-btn.close { background: #ff5f56; }
+.window-btn.minimize { background: #ffbd2e; }
+.window-btn.maximize { background: #27c93f; }
+
+.window-title {
+    flex: 1;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0 15px;
+}
+
+.window-content { flex: 1; overflow: auto; position: relative; background: rgba(255, 255, 255, 0.85); }
+
+.launchpad {
+    position: absolute;
+    top: 28px;
+    left: 0;
+    width: 100vw;
+    height: calc(100vh - 28px);
+    background: rgba(30, 30, 30, 0.65);
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+    z-index: 15000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 50px 100px;
+    transition: opacity 0.25s ease;
+}
+.launchpad.hidden { opacity: 0; pointer-events: none; transform: scale(1.05); }
+
+.launchpad-search { margin-bottom: 40px; width: 100%; max-width: 400px; }
+.launchpad-search input {
+    width: 100%;
+    padding: 10px 16px;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.15);
+    color: var(--text-light);
+    font-size: 15px;
+    outline: none;
+    text-align: center;
+}
+
+.launchpad-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 30px;
+    width: 100%;
+    max-width: 900px;
+    overflow-y: auto;
+    justify-items: center;
+}
+
+.launchpad-app-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 14px;
+    transition: transform 0.2s, background 0.2s;
+    width: 100px;
+}
+.launchpad-app-item:hover { background: rgba(255,255,255,0.12); transform: translateY(-4px); }
+.launchpad-app-item svg { width: 64px; height: 64px; margin-bottom: 8px; filter: drop-shadow(0 6px 12px rgba(0,0,0,0.3)); }
+.launchpad-app-item span {
+    color: var(--text-light);
+    font-size: 13px;
+    font-weight: 500;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+}
+
+.dock {
+    position: fixed;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 68px;
+    background: var(--dock-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 22px;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    gap: 10px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.35);
+    z-index: 10000;
+}
+
+.dock-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 14px;
+    border: none;
+    background: rgba(255, 255, 255, 0.25);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-primary);
+    transition: transform 0.2s;
+}
+.dock-btn:hover { transform: translateY(-6px) scale(1.08); background: rgba(255, 255, 255, 0.4); }
+
+.dock-separator { width: 1px; height: 36px; background: rgba(255, 255, 255, 0.25); margin: 0 2px; }
+.dock-apps { display: flex; gap: 8px; align-items: center; }
+
+.dock-app-icon {
+    position: relative;
+    width: 50px;
+    height: 50px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s;
+    background: rgba(255, 255, 255, 0.15);
+}
+.dock-app-icon:hover { transform: translateY(-6px) scale(1.08); background: rgba(255, 255, 255, 0.3); }
+.dock-app-icon svg { width: 36px; height: 36px; }
+.dock-app-icon.running::after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    width: 5px;
+    height: 5px;
+    background: var(--text-primary);
+    border-radius: 50%;
+}
